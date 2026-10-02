@@ -1,0 +1,6 @@
+node_modules/
+main.js
+.tmp-tests/
+*.log
+.agents/
+skills-lock.json

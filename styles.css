@@ -1,0 +1,76 @@
+.root-books-integration-card {
+	margin: 0.75rem 0;
+	padding: 0.9rem 1rem;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	background: var(--background-secondary);
+}
+
+.root-books-integration-card h3,
+.root-books-integration-card h4,
+.root-books-integration-card p {
+	margin-block: 0 0.4rem;
+}
+
+.root-books-integration-card ul {
+	margin-block-end: 0;
+}
+
+.root-books-core-conflict {
+	padding: 0.75rem;
+	border-inline-start: 3px solid var(--color-orange);
+	background: var(--background-secondary);
+}
+
+.root-books-panel-preview,
+.root-books-status,
+.root-books-tab-label {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+}
+
+.root-books-panel-preview {
+	margin: 0.75rem 0;
+	padding: 0.65rem 0.8rem;
+	border: 1px solid
+		color-mix(in srgb, var(--root-books-accent) 65%, transparent);
+	border-radius: var(--radius-s);
+	box-shadow: inset 3px 0 var(--root-books-accent);
+}
+
+.root-books-status {
+	cursor: pointer;
+	color: color-mix(in srgb, var(--root-books-accent) 70%, var(--text-normal));
+}
+
+.root-books-status-icon,
+.root-books-tab-label-icon {
+	display: inline-flex;
+}
+
+.root-books-status-icon svg,
+.root-books-tab-label-icon svg {
+	width: 0.95em;
+	height: 0.95em;
+}
+
+.workspace-tab-header.root-books-tab {
+	box-shadow: inset 0 -2px var(--root-books-accent);
+}
+
+.root-books-tab-label {
+	max-width: 10rem;
+	margin-inline-start: 0.35rem;
+	padding: 0.1rem 0.35rem;
+	overflow: hidden;
+	border-radius: var(--radius-s);
+	color: color-mix(in srgb, var(--root-books-accent) 78%, var(--text-normal));
+	font-size: var(--font-ui-smaller);
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.root-books-tab-label:hover {
+	background: color-mix(in srgb, var(--root-books-accent) 14%, transparent);
+}
