@@ -26,9 +26,9 @@
   "license": "0BSD",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/VingGit/root-books-workspace.git"
+    "url": "git+https://github.com/VingGit/obsidian-root-books-workspace.git"
   },
-  "homepage": "https://github.com/VingGit/root-books-workspace",
+  "homepage": "https://github.com/VingGit/obsidian-root-books-workspace",
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@types/node": "^24.10.0",
