@@ -1,4 +1,4 @@
-export const ECOSYSTEM_VERSION = "0.9.1";
+export const ECOSYSTEM_VERSION = "0.9.2";
 
 export const REQUIRED_PLUGIN_IDS = [
 	"folder-notes",

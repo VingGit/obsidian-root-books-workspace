@@ -1,4 +1,4 @@
-# Root Books Workspace repository contract
+# Root Books Toolkit repository contract
 
 Detailed agent-only instructions live under `.github/instructions/`.
 

@@ -6,7 +6,7 @@ applyTo: "{src,tests}/**,manifest.json,package.json,styles.css"
 
 # Product architecture
 
-Root Books Workspace coordinates four independently installed plugins:
+Root Books Toolkit coordinates four independently installed plugins:
 
 - Folder Notes (`folder-notes`)
 - Custom File Explorer Sorting (`custom-sort`)

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.2
+
+- Renamed the plugin display name to Root Books Toolkit so the replacement
+  repository can be submitted independently of the archived community entry
+  that still reserves Root Books Workspace.
+- Kept the stable `root-books-workspace` plugin ID and installation directory.
+
 ## 0.9.1
 
 - Published Root Books Workspace from a fresh repository so Obsidian can bind

@@ -27,7 +27,7 @@ export class RootBooksWorkspaceSettingTab extends PluginSettingTab {
 	getSettingDefinitions(): SettingDefinitionItem[] {
 		return [
 			{
-				name: "Root Books Workspace",
+				name: "Root Books Toolkit",
 				desc: `Ecosystem version ${ECOSYSTEM_VERSION}. Companion plugins remain independent and are never installed automatically.`,
 				searchable: false,
 			},

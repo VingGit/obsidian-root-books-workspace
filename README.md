@@ -1,6 +1,6 @@
-# Root Books Workspace
+# Root Books Toolkit
 
-Root Books Workspace turns the first-level folders in an Obsidian vault into a
+Root Books Toolkit turns the first-level folders in an Obsidian vault into a
 small, portable book workspace. Each book uses an `index.md` folder note and
 can share the same appearance with Quartz through two frontmatter values:
 
@@ -17,7 +17,7 @@ managed tab groups or take over Obsidian's workspace layout.
 
 ## What it coordinates
 
-Root Books Workspace works with four independently installed community
+Root Books Toolkit works with four independently installed community
 plugins. Its setup screen audits each one separately, explains the recommended
 settings, and changes installed plugins only after you choose **Accept all**.
 It never installs plugins for you.
@@ -65,7 +65,7 @@ from Obsidian's Community plugins page.
 
 ## Ecosystem versions
 
-Root Books Workspace, [Root Index Panels](https://github.com/VingGit/root-index-panels),
+Root Books Toolkit, [Root Index Panels](https://github.com/VingGit/root-index-panels),
 and [Custom File Explorer Sorting Support](https://github.com/VingGit/custom-file-explorer-sorting-support)
 use the same release version. Matching versions share the same portable
 `panel.icon` and `panel.accent` contract across Obsidian and Quartz.

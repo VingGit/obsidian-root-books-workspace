@@ -6,7 +6,7 @@ applyTo: "**"
 
 # Repository boundaries
 
-- Root Books Workspace is an Obsidian community plugin. Source lives in `src/`.
+- Root Books Toolkit is an Obsidian community plugin. Source lives in `src/`.
 - Keep `src/main.ts` limited to lifecycle and orchestration.
 - Keep human documentation in `README.md` and `CHANGELOG.md`. Agent-only
   material belongs in `AGENTS.md` or `.github/`.

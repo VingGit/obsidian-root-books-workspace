@@ -1,6 +1,6 @@
 # Architecture
 
-Root Books Workspace is an orchestration layer rather than a second
+Root Books Toolkit is an orchestration layer rather than a second
 implementation of its companion plugins.
 
 - `main.ts` owns lifecycle only.

@@ -21,9 +21,9 @@ export class IntegrationOnboardingModal extends Modal {
 
 	private async render(): Promise<void> {
 		this.contentEl.empty();
-		this.setTitle("Set up Root Books Workspace");
+		this.setTitle("Set up Root Books Toolkit");
 		this.contentEl.createEl("p", {
-			text: "Root Books Workspace coordinates four independent community plugins. Review what each one contributes before applying the recommended settings.",
+			text: "Root Books Toolkit coordinates four independent community plugins. Review what each one contributes before applying the recommended settings.",
 		});
 
 		const audits = await auditIntegrations(this.app);
@@ -76,7 +76,7 @@ export class IntegrationOnboardingModal extends Modal {
 							return;
 						}
 						new Notice(
-							"Root Books Workspace integrations are ready.",
+							"Root Books Toolkit integrations are ready.",
 						);
 						this.close();
 					} catch (error) {

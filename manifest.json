@@ -1,7 +1,7 @@
 {
   "id": "root-books-workspace",
-  "name": "Root Books Workspace",
-  "version": "0.9.1",
+  "name": "Root Books Toolkit",
+  "version": "0.9.2",
   "minAppVersion": "1.13.0",
   "description": "Coordinate folder notes, portable book metadata, note creation, dates, and sorting in book-organized vaults.",
   "author": "VingGit",
