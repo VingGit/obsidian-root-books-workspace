@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.3
+
+- Coordinated the ecosystem release with folder-page directory sorting in
+  Custom File Explorer Sorting Support. Root Books Toolkit behavior is unchanged.
+
 ## 0.9.2
 
 - Renamed the plugin display name to Root Books Toolkit so the replacement
