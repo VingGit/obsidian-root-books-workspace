@@ -18,9 +18,12 @@ managed tab groups or take over Obsidian's workspace layout.
 ## What it coordinates
 
 Root Books Toolkit works with four independently installed community
-plugins. Its setup screen audits each one separately, explains the recommended
-settings, and reports differences without changing another plugin. It never
-installs, enables, disables, or configures plugins for you.
+plugins. Its settings dashboard audits each one separately and shows its
+installed version, enabled state, every watched setting, and the current and
+expected value. Green rows match; red rows need attention. A shortcut opens
+the companion's settings, or the Community plugins screen when it is missing
+or disabled. Toolkit never installs, enables, disables, or configures another
+plugin for you.
 
 - **Folder Notes** owns `index.md` folder notes.
 - **Custom File Explorer Sorting** owns File Explorer ordering.
@@ -34,6 +37,25 @@ screen reports the overlap and leaves the choice to you.
 The thesis template uses Community Install Manager to install registry plugins
 and merge a curated selection of companion settings. Other vaults can use the
 same approach or configure the four companions manually.
+
+## Custom watch profile
+
+The four workflow companions have built-in checks. You can also add any
+installed community plugin to the watch profile from Toolkit's settings, then
+select individual setting paths and capture their current values as defaults.
+Checks can require an exact value, any value, a non-empty value, or one of a
+JSON list of accepted values. These rules are stored as ordinary Toolkit data,
+so adding another generic check does not require changing code.
+
+Toolkit can import the selected settings from Community Install Manager's
+`community-plugins-settings.json` profile. The import copies those selected
+values into Toolkit's read-only watch profile; it does not make Toolkit a
+second installer or settings writer.
+
+The same dashboard also reports the coordinator's own responsibilities:
+whether root workflow metadata is valid, which first-level book folders are
+missing `index.md`, whether portable icon and accent metadata is valid, and
+whether the note, date, title, sorting, and decoration services are active.
 
 ## Note workflow
 
@@ -64,9 +86,9 @@ them in:
 .obsidian/plugins/root-books-workspace/
 ```
 
-Enable the plugin, review the read-only companion status in its settings, and
-install or configure any missing companions through Obsidian or a plugin
-manager of your choice.
+Enable the plugin, review the coordinator dashboard, and install or configure
+anything that needs attention through Obsidian or a plugin manager of your
+choice.
 
 ## Ecosystem versions
 

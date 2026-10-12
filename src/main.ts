@@ -6,8 +6,11 @@ import { FolderNoteTitleSync } from "./folder-note-titles";
 import { NewNotePipeline } from "./new-note-pipeline";
 import { RootBooksWorkspaceSettingTab } from "./settings";
 import { SortingCoordinator } from "./sorting";
-import { DEFAULT_SETTINGS } from "./types";
-import type { RootBooksWorkspaceSettings } from "./types";
+import { DEFAULT_SETTINGS, normalizeWatchedPlugins } from "./types";
+import type {
+	RootBooksWorkspaceSettings,
+	RuntimeCoordinatorState,
+} from "./types";
 import { registerUniqueNoteAction } from "./unique-note";
 
 export default class RootBooksWorkspacePlugin extends Plugin {
@@ -17,6 +20,7 @@ export default class RootBooksWorkspacePlugin extends Plugin {
 	private pipeline: NewNotePipeline | null = null;
 	private folderTitles: FolderNoteTitleSync | null = null;
 	private decorations: BookDecorations | null = null;
+	private filenameDateSyncActive = false;
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
@@ -41,6 +45,7 @@ export default class RootBooksWorkspacePlugin extends Plugin {
 			() => this.saveSettings(),
 			this.sorting,
 		).start();
+		this.filenameDateSyncActive = true;
 		this.folderTitles.start();
 		this.decorations.start();
 
@@ -64,6 +69,17 @@ export default class RootBooksWorkspacePlugin extends Plugin {
 		this.decorations?.openAppearancePicker();
 	}
 
+	runtimeCoordinatorState(): RuntimeCoordinatorState {
+		return {
+			initialized: this.initialized,
+			newNotePipeline: this.pipeline !== null,
+			filenameDateSync: this.filenameDateSyncActive,
+			folderTitleSync: this.folderTitles !== null,
+			sorting: this.sorting !== null,
+			bookDecorations: this.decorations !== null,
+		};
+	}
+
 	async saveSettings(): Promise<void> {
 		await this.saveData(this.settings);
 	}
@@ -71,7 +87,12 @@ export default class RootBooksWorkspacePlugin extends Plugin {
 	private async loadSettings(): Promise<void> {
 		const stored =
 			(await this.loadData()) as Partial<RootBooksWorkspaceSettings> | null;
-		this.settings = { ...DEFAULT_SETTINGS, ...(stored ?? {}) };
+		this.settings = {
+			...DEFAULT_SETTINGS,
+			...(stored ?? {}),
+			schemaVersion: 2,
+			watchedPlugins: normalizeWatchedPlugins(stored?.watchedPlugins),
+		};
 	}
 
 	onunload(): void {

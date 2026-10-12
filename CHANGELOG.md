@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.11.0
+
+- Replaced the terse companion summary with a coordinator dashboard showing
+  installation, enablement, version, and every current-versus-expected setting
+  value with clear ready and mismatch states.
+- Added direct shortcuts to companion settings and the Community plugins page.
+- Added a declarative custom watch profile so users can monitor installed
+  plugins and selected setting paths without changing Toolkit code.
+- Added read-only import of Community Install Manager's selected-settings
+  profile.
+- Added health reporting for root workflow metadata, first-level book indexes,
+  portable appearance metadata, Toolkit runtime services, and the Custom Sort
+  refresh command.
+
 ## 0.10.0
 
 - Reduced companion integration to a read-only health audit. Root Books Toolkit

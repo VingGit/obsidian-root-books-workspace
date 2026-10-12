@@ -14,9 +14,12 @@ Root Books Toolkit coordinates four independently installed plugins:
 - Frontmatter Date Manager (`frontmatter-date-manager`)
 
 Read-only audit adapters must be isolated by plugin ID, feature-detected, and
-visually separate in settings. Adding another integration should require one
-new descriptor rather than conditionals spread through the product. Toolkit
-must not install, enable, disable, or write settings for companion plugins.
+visually separate in settings. Built-in checks remain descriptors; generic
+additional plugins and setting paths belong in the persisted declarative watch
+profile. Supported comparisons are fixed, data-only operations and must never
+execute user-supplied code. Toolkit may read and import Community Install
+Manager's selected-settings profile, but must not install, enable, disable, or
+write settings for companion plugins.
 
 The portable book model is one first-level folder per book. `index.md` is the
 folder note. Shared appearance metadata is exclusively:
@@ -31,10 +34,11 @@ Only `lucide:<kebab-name>` icons and direct hexadecimal accents are valid.
 Legacy values may be converted once, but they are never read as a second live
 configuration source.
 
-The first version owns read-only dependency auditing, folder-note title synchronization,
-filename-derived creation dates, inherited Markdown templates/date prefixes,
-selective Custom Sort refreshes, a replacement unique-note command, appearance
-editing, and passive book decoration.
+The first version owns detailed read-only dependency auditing, declarative
+custom watches, coordinator health reporting, folder-note title
+synchronization, filename-derived creation dates, inherited Markdown
+templates/date prefixes, selective Custom Sort refreshes, a replacement
+unique-note command, appearance editing, and passive book decoration.
 
 It does not own book-aware routing, managed groups, grids, pop-outs, pseudo-tab
 dragging, focused Explorer trees, Article Navigator, `.obsidianignore`, bulk
