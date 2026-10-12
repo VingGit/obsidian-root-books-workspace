@@ -3,12 +3,7 @@ import { migrateLegacyBookMetadata } from "./book-metadata";
 import { CreatedFromFilenameSync } from "./created-from-filename";
 import { BookDecorations } from "./decorations";
 import { FolderNoteTitleSync } from "./folder-note-titles";
-import {
-	auditIntegrations,
-	isCoreUniqueNoteCreatorEnabled,
-} from "./integrations";
 import { NewNotePipeline } from "./new-note-pipeline";
-import { IntegrationOnboardingModal } from "./onboarding";
 import { RootBooksWorkspaceSettingTab } from "./settings";
 import { SortingCoordinator } from "./sorting";
 import { DEFAULT_SETTINGS } from "./types";
@@ -18,7 +13,6 @@ import { registerUniqueNoteAction } from "./unique-note";
 export default class RootBooksWorkspacePlugin extends Plugin {
 	settings: RootBooksWorkspaceSettings = { ...DEFAULT_SETTINGS };
 	private initialized = false;
-	private onboardingDismissed = false;
 	private sorting: SortingCoordinator | null = null;
 	private pipeline: NewNotePipeline | null = null;
 	private folderTitles: FolderNoteTitleSync | null = null;
@@ -60,32 +54,6 @@ export default class RootBooksWorkspacePlugin extends Plugin {
 				);
 			this.decorations.refresh();
 		}
-
-		await this.openSetupWhenNeeded();
-	}
-
-	private async openSetupWhenNeeded(): Promise<void> {
-		if (this.onboardingDismissed) return;
-		const audits = await auditIntegrations(this.app);
-		if (
-			audits.every(
-				(audit) => audit.installed && audit.enabled && audit.configured,
-			) &&
-			!isCoreUniqueNoteCreatorEnabled(this.app)
-		) {
-			return;
-		}
-		this.reopenSetup();
-	}
-
-	reopenSetup(): void {
-		new IntegrationOnboardingModal(
-			this.app,
-			() => {
-				this.onboardingDismissed = true;
-			},
-			() => this.decorations?.refresh(),
-		).open();
 	}
 
 	refreshDecorations(): void {

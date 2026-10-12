@@ -1,8 +1,8 @@
-import { App, Notice, PluginSettingTab } from "obsidian";
+import { App, PluginSettingTab } from "obsidian";
 import type { Plugin, Setting, SettingDefinitionItem } from "obsidian";
 import {
 	auditIntegrations,
-	applyRecommendedIntegrations,
+	isCoreUniqueNoteCreatorEnabled,
 	openCommunityPluginSettings,
 } from "./integrations";
 import { ECOSYSTEM_VERSION } from "./types";
@@ -11,7 +11,6 @@ import type { RootBooksWorkspaceSettings } from "./types";
 export interface RootBooksSettingsHost {
 	settings: RootBooksWorkspaceSettings;
 	saveSettings(): Promise<void>;
-	reopenSetup(): void;
 	refreshDecorations(): void;
 	openAppearancePicker(): void;
 }
@@ -28,7 +27,7 @@ export class RootBooksWorkspaceSettingTab extends PluginSettingTab {
 		return [
 			{
 				name: "Root Books Toolkit",
-				desc: `Ecosystem version ${ECOSYSTEM_VERSION}. Companion plugins remain independent and are never installed automatically.`,
+				desc: `Ecosystem version ${ECOSYSTEM_VERSION}. Companion plugins remain independent; Toolkit only audits their state and never installs, enables, disables, or configures them.`,
 				searchable: false,
 			},
 			{
@@ -43,8 +42,8 @@ export class RootBooksWorkspaceSettingTab extends PluginSettingTab {
 						},
 					},
 					{
-						name: "Recommended integration setup",
-						desc: "Enables installed companions, applies the listed recommendations, and disables core Unique Note Creator.",
+						name: "Manage companion plugins",
+						desc: "Use Community Install Manager or configure companions manually. Toolkit only reports differences from its recommended profile.",
 						render: (setting) =>
 							this.renderIntegrationActions(setting),
 					},
@@ -160,29 +159,26 @@ export class RootBooksWorkspaceSettingTab extends PluginSettingTab {
 					issues.createEl("li", { text: issue });
 			}
 		}
+		if (isCoreUniqueNoteCreatorEnabled(this.app)) {
+			const conflict = list.createDiv({
+				cls: "root-books-integration-card root-books-core-conflict",
+			});
+			conflict.createEl("strong", {
+				text: "Core Unique Note Creator is enabled",
+			});
+			conflict.createEl("p", {
+				text: "Toolkit also provides a unique-note command. Disable the core plugin manually if you want a single command owner.",
+			});
+		}
 	}
 
 	private renderIntegrationActions(setting: Setting): void {
 		setting
 			.addButton((button) =>
 				button
-					.setButtonText("Review setup")
+					.setButtonText("Refresh status")
 					.setCta()
-					.onClick(() => this.host.reopenSetup()),
-			)
-			.addButton((button) =>
-				button.setButtonText("Apply now").onClick(async () => {
-					const missing = await applyRecommendedIntegrations(
-						this.app,
-					);
-					new Notice(
-						missing.length > 0
-							? `Applied installed integrations. Still missing: ${missing.join(", ")}`
-							: "Recommended integration settings applied.",
-						8_000,
-					);
-					this.update();
-				}),
+					.onClick(() => this.update()),
 			)
 			.addButton((button) =>
 				button

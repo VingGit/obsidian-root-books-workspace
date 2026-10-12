@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.10.0
+
+- Reduced companion integration to a read-only health audit. Root Books Toolkit
+  no longer installs or enables plugins, rewrites their settings, disables the
+  core Unique Note Creator, or opens a mutating onboarding flow.
+- Moved reusable companion provisioning to the thesis template's curated
+  Community Install Manager profile while preserving manual configuration for
+  other vaults.
+- Kept the first-level-book workflow, portable appearance metadata, note/date
+  pipeline, folder-title synchronization, selective sorting refreshes, and
+  unique-note action unchanged.
+
 ## 0.9.3
 
 - Coordinated the ecosystem release with folder-page directory sorting in

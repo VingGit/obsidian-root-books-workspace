@@ -15,8 +15,9 @@ applyTo: "**"
   to releases.
 - Operate locally and offline. Do not add telemetry, remote code, dependency
   installation, or filesystem access outside the vault.
-- Never silently change companion-plugin settings. The user-facing onboarding
-  flow must explain each recommendation and require an explicit action.
+- Never change companion-plugin settings or enablement. Community Install
+  Manager or the user owns provisioning; Toolkit only audits and explains its
+  recommendations.
 - Preserve unrelated vault frontmatter and note bodies. All migrations must be
   idempotent.
 - Inspect status, diff, ignored files, secrets, author identity, branch, and

@@ -1,4 +1,5 @@
 import { App, normalizePath } from "obsidian";
+import { recommendationIssues } from "./integration-audit";
 import type { IntegrationAudit, RequiredPluginId } from "./types";
 
 interface Recommendation {
@@ -16,17 +17,14 @@ interface IntegrationDescriptor {
 
 interface LoadedCompanion {
 	settings?: Record<string, unknown>;
-	saveSettings?: () => Promise<void>;
 }
 
 interface CommunityPluginManager {
 	plugins?: Record<string, LoadedCompanion>;
 	enabledPlugins?: Set<string>;
-	enablePlugin?: (id: string) => Promise<void>;
 }
 
 interface CorePluginManager {
-	disablePlugin?: (id: string) => Promise<void> | void;
 	getPluginById?: (id: string) => { enabled?: boolean } | undefined;
 }
 
@@ -46,49 +44,6 @@ function coreManager(app: App): CorePluginManager | undefined {
 
 function settingsManager(app: App): SettingsManager | undefined {
 	return (app as App & { setting?: SettingsManager }).setting;
-}
-
-function getPath(record: Record<string, unknown>, path: string): unknown {
-	let current: unknown = record;
-	for (const part of path.split(".")) {
-		if (
-			typeof current !== "object" ||
-			current === null ||
-			Array.isArray(current)
-		)
-			return undefined;
-		current = (current as Record<string, unknown>)[part];
-	}
-	return current;
-}
-
-function setPath(
-	record: Record<string, unknown>,
-	path: string,
-	value: unknown,
-): void {
-	const parts = path.split(".");
-	let current = record;
-	for (const part of parts.slice(0, -1)) {
-		const existing = current[part];
-		if (
-			typeof existing === "object" &&
-			existing !== null &&
-			!Array.isArray(existing)
-		) {
-			current = existing as Record<string, unknown>;
-		} else {
-			const next: Record<string, unknown> = {};
-			current[part] = next;
-			current = next;
-		}
-	}
-	const final = parts.at(-1);
-	if (final) current[final] = structuredClone(value);
-}
-
-function equal(left: unknown, right: unknown): boolean {
-	return JSON.stringify(left) === JSON.stringify(right);
 }
 
 export const INTEGRATIONS: readonly IntegrationDescriptor[] = [
@@ -301,15 +256,10 @@ export async function auditIntegrations(app: App): Promise<IntegrationAudit[]> {
 			const settings = installed
 				? await pluginSettings(app, descriptor.id)
 				: {};
-			const issues = descriptor.recommendations
-				.filter(
-					(recommendation) =>
-						!equal(
-							getPath(settings, recommendation.path),
-							recommendation.value,
-						),
-				)
-				.map((recommendation) => recommendation.label);
+			const issues = recommendationIssues(
+				settings,
+				descriptor.recommendations,
+			);
 			return {
 				id: descriptor.id,
 				name: descriptor.name,
@@ -323,65 +273,8 @@ export async function auditIntegrations(app: App): Promise<IntegrationAudit[]> {
 	);
 }
 
-async function savePluginSettings(
-	app: App,
-	descriptor: IntegrationDescriptor,
-): Promise<void> {
-	const manager = communityManager(app);
-	const loaded = manager?.plugins?.[descriptor.id];
-	const settings = await pluginSettings(app, descriptor.id);
-	for (const recommendation of descriptor.recommendations) {
-		setPath(settings, recommendation.path, recommendation.value);
-	}
-
-	if (loaded?.settings && loaded.saveSettings) {
-		for (const key of Object.keys(loaded.settings))
-			delete loaded.settings[key];
-		Object.assign(loaded.settings, settings);
-		await loaded.saveSettings();
-		return;
-	}
-
-	const path = normalizePath(
-		`${app.vault.configDir}/plugins/${descriptor.id}/data.json`,
-	);
-	await app.vault.adapter.write(
-		path,
-		`${JSON.stringify(settings, null, 2)}\n`,
-	);
-}
-
-export async function applyRecommendedIntegrations(
-	app: App,
-): Promise<string[]> {
-	const missing: string[] = [];
-	const manager = communityManager(app);
-	for (const descriptor of INTEGRATIONS) {
-		if (!(await pluginInstalled(app, descriptor.id))) {
-			missing.push(descriptor.name);
-			continue;
-		}
-		if (!pluginEnabled(app, descriptor.id) && manager?.enablePlugin) {
-			await manager.enablePlugin(descriptor.id);
-		}
-		await savePluginSettings(app, descriptor);
-	}
-	await disableCoreUniqueNoteCreator(app);
-	return missing;
-}
-
 export function isCoreUniqueNoteCreatorEnabled(app: App): boolean {
 	return coreManager(app)?.getPluginById?.("zk-prefixer")?.enabled === true;
-}
-
-export async function disableCoreUniqueNoteCreator(app: App): Promise<void> {
-	const manager = coreManager(app);
-	if (
-		manager?.getPluginById?.("zk-prefixer")?.enabled &&
-		manager.disablePlugin
-	) {
-		await manager.disablePlugin("zk-prefixer");
-	}
 }
 
 export function openCommunityPluginSettings(app: App): void {

@@ -19,17 +19,21 @@ managed tab groups or take over Obsidian's workspace layout.
 
 Root Books Toolkit works with four independently installed community
 plugins. Its setup screen audits each one separately, explains the recommended
-settings, and changes installed plugins only after you choose **Accept all**.
-It never installs plugins for you.
+settings, and reports differences without changing another plugin. It never
+installs, enables, disables, or configures plugins for you.
 
 - **Folder Notes** owns `index.md` folder notes.
 - **Custom File Explorer Sorting** owns File Explorer ordering.
 - **Front Matter Title** displays folder-note titles without injecting aliases.
 - **Frontmatter Date Manager** owns `created` and `updated` timestamps.
 
-The accepted setup also disables Obsidian's core Unique Note Creator because
-this plugin supplies a replacement **Create new unique note** command and
-ribbon button.
+The plugin supplies a replacement **Create new unique note** command and ribbon
+button. If Obsidian's core Unique Note Creator is also enabled, the settings
+screen reports the overlap and leaves the choice to you.
+
+The thesis template uses Community Install Manager to install registry plugins
+and merge a curated selection of companion settings. Other vaults can use the
+same approach or configure the four companions manually.
 
 ## Note workflow
 
@@ -60,8 +64,9 @@ them in:
 .obsidian/plugins/root-books-workspace/
 ```
 
-Enable the plugin, review its setup screen, and install any missing companions
-from Obsidian's Community plugins page.
+Enable the plugin, review the read-only companion status in its settings, and
+install or configure any missing companions through Obsidian or a plugin
+manager of your choice.
 
 ## Ecosystem versions
 

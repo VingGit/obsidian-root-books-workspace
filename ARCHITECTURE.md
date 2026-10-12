@@ -4,7 +4,7 @@ Root Books Toolkit is an orchestration layer rather than a second
 implementation of its companion plugins.
 
 - `main.ts` owns lifecycle only.
-- `integrations.ts` keeps one adapter descriptor per companion plugin.
+- `integrations.ts` keeps one read-only audit descriptor per companion plugin.
 - `note-rules.ts`, `new-note-pipeline.ts`, and `created-from-filename.ts` own
   the note-creation and date pipeline.
 - `sorting.ts` coalesces the few workflow events that legitimately require a
@@ -16,3 +16,7 @@ implementation of its companion plugins.
 The shared Quartz/Obsidian contract is intentionally limited to direct hex
 colors and `lucide:<kebab-name>` icon identifiers. Obsidian-specific settings
 remain in plugin data rather than frontmatter.
+
+Provisioning is outside this plugin. Community Install Manager or the user may
+install, enable, and configure companions; Toolkit only reports their current
+state and recommended-setting differences.

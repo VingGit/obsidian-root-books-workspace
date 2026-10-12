@@ -13,9 +13,10 @@ Root Books Toolkit coordinates four independently installed plugins:
 - Front Matter Title (`obsidian-front-matter-title-plugin`)
 - Frontmatter Date Manager (`frontmatter-date-manager`)
 
-Adapters must be isolated by plugin ID, feature-detected, and visually separate
-in onboarding and settings. Adding another integration should require one new
-adapter rather than conditionals spread through the product.
+Read-only audit adapters must be isolated by plugin ID, feature-detected, and
+visually separate in settings. Adding another integration should require one
+new descriptor rather than conditionals spread through the product. Toolkit
+must not install, enable, disable, or write settings for companion plugins.
 
 The portable book model is one first-level folder per book. `index.md` is the
 folder note. Shared appearance metadata is exclusively:
@@ -30,7 +31,7 @@ Only `lucide:<kebab-name>` icons and direct hexadecimal accents are valid.
 Legacy values may be converted once, but they are never read as a second live
 configuration source.
 
-The first version owns dependency auditing, folder-note title synchronization,
+The first version owns read-only dependency auditing, folder-note title synchronization,
 filename-derived creation dates, inherited Markdown templates/date prefixes,
 selective Custom Sort refreshes, a replacement unique-note command, appearance
 editing, and passive book decoration.
