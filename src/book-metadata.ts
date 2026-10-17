@@ -1,6 +1,7 @@
 import {
 	App,
 	FuzzySuggestModal,
+	getIconIds,
 	Modal,
 	Notice,
 	Setting,
@@ -8,6 +9,7 @@ import {
 	TFolder,
 	setIcon,
 } from "obsidian";
+import type { FuzzyMatch, TextComponent } from "obsidian";
 import { cachedFrontmatter, frontmatterRecord } from "./frontmatter";
 import type { BookPanelMetadata, BookRecord } from "./types";
 
@@ -29,15 +31,6 @@ export function normalizeIcon(value: unknown): string | null {
 	if (typeof value !== "string") return null;
 	const normalized = value.trim();
 	return LUCIDE_ICON.test(normalized) ? normalized : null;
-}
-
-export function legacyIconToPortable(value: unknown): string | null {
-	if (typeof value !== "string") return null;
-	const normalized = value.trim().toLowerCase();
-	if (normalizeIcon(normalized)) return normalized;
-	return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(normalized)
-		? `lucide:${normalized}`
-		: null;
 }
 
 function ownRecord(value: unknown): Record<string, unknown> | null {
@@ -89,65 +82,6 @@ export function collectBooks(app: App): BookRecord[] {
 		.sort((left, right) => left.name.localeCompare(right.name));
 }
 
-export async function migrateLegacyBookMetadata(app: App): Promise<number> {
-	let changedFiles = 0;
-	for (const book of collectBooks(app)) {
-		const file = app.vault.getAbstractFileByPath(book.indexPath);
-		if (!(file instanceof TFile)) continue;
-		let changed = false;
-		await app.fileManager.processFrontMatter(file, (value: unknown) => {
-			const frontmatter = frontmatterRecord(value);
-			const panel = ownRecord(frontmatter.panel) ?? {};
-			const legacySection = ownRecord(frontmatter["book-tabs"]);
-			const legacyAccent =
-				normalizeAccent(panel.accent) ??
-				normalizeAccent(legacySection?.color) ??
-				normalizeAccent(frontmatter.color);
-			const portableIcon = legacyIconToPortable(panel.icon);
-
-			if (legacyAccent && panel.accent !== legacyAccent) {
-				panel.accent = legacyAccent;
-				changed = true;
-			}
-			if (portableIcon && panel.icon !== portableIcon) {
-				panel.icon = portableIcon;
-				changed = true;
-			}
-			if (!panel.icon) {
-				panel.icon = DEFAULT_PANEL.icon;
-				changed = true;
-			}
-			if (!panel.accent) {
-				panel.accent = DEFAULT_PANEL.accent;
-				changed = true;
-			}
-			frontmatter.panel = panel;
-
-			if (legacySection && "color" in legacySection) {
-				delete legacySection.color;
-				changed = true;
-			}
-			if (legacySection && "tab-text-bg" in legacySection) {
-				delete legacySection["tab-text-bg"];
-				changed = true;
-			}
-			if (legacySection && Object.keys(legacySection).length === 0) {
-				delete frontmatter["book-tabs"];
-			}
-			if (normalizeAccent(frontmatter.color)) {
-				delete frontmatter.color;
-				changed = true;
-			}
-			if ("tab-text-bg" in frontmatter) {
-				delete frontmatter["tab-text-bg"];
-				changed = true;
-			}
-		});
-		if (changed) changedFiles += 1;
-	}
-	return changedFiles;
-}
-
 export async function saveBookPanel(
 	app: App,
 	book: BookRecord,
@@ -179,33 +113,63 @@ export class BookAppearanceModal extends Modal {
 		this.setTitle(`Book appearance — ${this.book.name}`);
 		let accent = this.book.panel.accent;
 		let icon = this.book.panel.icon;
+		let accentInput: TextComponent | null = null;
+		let iconInput: TextComponent | null = null;
+		let preview: HTMLElement | null = null;
+		let previewIcon: HTMLElement | null = null;
+		const refreshPreview = (): void => {
+			if (!preview || !previewIcon) return;
+			previewIcon.empty();
+			setIcon(previewIcon, icon.replace(/^lucide:/, ""));
+			preview.style.setProperty("--root-books-accent", accent);
+		};
 
 		new Setting(this.contentEl)
 			.setName("Accent color")
 			.setDesc("Stored as a direct hexadecimal value in panel.accent.")
 			.addColorPicker((picker) =>
-				picker.setValue(accent).onChange((value) => (accent = value)),
+				picker.setValue(accent).onChange((value) => {
+					accent = value;
+					accentInput?.setValue(value);
+					refreshPreview();
+				}),
 			)
-			.addText((text) =>
-				text
-					.setValue(accent)
-					.onChange((value) => (accent = value.trim())),
-			);
+			.addText((text) => {
+				accentInput = text;
+				text.setValue(accent).onChange((value) => {
+					accent = value.trim();
+					refreshPreview();
+				});
+			});
 
 		new Setting(this.contentEl)
 			.setName("Lucide icon")
-			.setDesc("Use the shared form lucide:book-open.")
-			.addText((text) =>
-				text.setValue(icon).onChange((value) => (icon = value.trim())),
+			.setDesc(
+				"Choose from Obsidian's bundled icons or enter the shared form lucide:book-open.",
+			)
+			.addText((text) => {
+				iconInput = text;
+				text.setValue(icon).onChange((value) => {
+					icon = value.trim();
+					refreshPreview();
+				});
+			})
+			.addButton((button) =>
+				button.setButtonText("Browse icons").onClick(() => {
+					new LucideIconPickerModal(this.app, (selected) => {
+						icon = selected;
+						iconInput?.setValue(selected);
+						refreshPreview();
+					}).open();
+				}),
 			);
 
-		const preview = this.contentEl.createDiv({
+		preview = this.contentEl.createDiv({
 			cls: "root-books-panel-preview",
 		});
-		const iconEl = preview.createSpan();
-		setIcon(iconEl, icon.replace(/^lucide:/, ""));
+		previewIcon = preview.createSpan();
 		preview.createSpan({ text: this.book.name });
-		preview.style.setProperty("--root-books-accent", accent);
+		refreshPreview();
 
 		new Setting(this.contentEl).addButton((button) =>
 			button
@@ -232,6 +196,51 @@ export class BookAppearanceModal extends Modal {
 
 	onClose(): void {
 		this.contentEl.empty();
+	}
+}
+
+function bundledLucideIcons(): string[] {
+	return [
+		...new Set(
+			getIconIds()
+				.map(String)
+				.map((id) => id.replace(/^lucide[:-]/, ""))
+				.filter((id) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id))
+				.map((id) => `lucide:${id}`),
+		),
+	].sort((left, right) => left.localeCompare(right));
+}
+
+class LucideIconPickerModal extends FuzzySuggestModal<string> {
+	private readonly icons = bundledLucideIcons();
+
+	constructor(
+		app: App,
+		private readonly onChoose: (icon: string) => void,
+	) {
+		super(app);
+		this.setPlaceholder("Search Obsidian's bundled Lucide icons");
+	}
+
+	getItems(): string[] {
+		return this.icons;
+	}
+
+	getItemText(icon: string): string {
+		return icon.replace(/^lucide:/, "");
+	}
+
+	renderSuggestion(match: FuzzyMatch<string>, element: HTMLElement): void {
+		const row = element.createDiv({ cls: "root-books-icon-suggestion" });
+		const icon = row.createSpan({
+			cls: "root-books-icon-suggestion-glyph",
+		});
+		setIcon(icon, this.getItemText(match.item));
+		row.createSpan({ text: match.item });
+	}
+
+	onChooseItem(icon: string): void {
+		this.onChoose(icon);
 	}
 }
 

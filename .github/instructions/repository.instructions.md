@@ -22,3 +22,12 @@ applyTo: "**"
   idempotent.
 - Inspect status, diff, ignored files, secrets, author identity, branch, and
   remote before every commit and push.
+- The project is still in development. Do not preserve legacy profiles,
+  schemas, fields, or behavior by default. When legacy support would affect a
+  change, ask the user whether to keep or discard it before implementing that
+  support.
+- Use the canonical thesis template vault for local plugin development and
+  direct build installation only. Treat the thesis fork as the release
+  consumer: update Root Books Toolkit there only through Obsidian's official
+  Community plugins update action. Never copy local development artifacts into
+  the fork when validating a release.

@@ -1,11 +1,17 @@
-import type { SettingAudit, WatchComparison } from "./types";
+import type { IntegrationAudit, SettingAudit, WatchComparison } from "./types";
 
 export interface AuditedRecommendation {
 	path: string;
 	label: string;
+	description?: string;
 	comparison?: WatchComparison;
 	value?: unknown;
 	expected?: unknown;
+	settingsLabel?: string;
+	settingsChildLabel?: string;
+	settingsTab?: string;
+	booleanLabels?: { true: string; false: string };
+	locatable?: boolean;
 }
 
 function getPath(record: Record<string, unknown>, path: string): unknown {
@@ -72,10 +78,26 @@ export function auditRecommendations(
 		return {
 			path: recommendation.path,
 			label: recommendation.label,
+			...(recommendation.description
+				? { description: recommendation.description }
+				: {}),
 			comparison,
 			expected,
 			actual,
 			ok: matches(actual, expected, comparison),
+			...(recommendation.settingsLabel
+				? { settingsLabel: recommendation.settingsLabel }
+				: {}),
+			...(recommendation.settingsChildLabel
+				? { settingsChildLabel: recommendation.settingsChildLabel }
+				: {}),
+			...(recommendation.settingsTab
+				? { settingsTab: recommendation.settingsTab }
+				: {}),
+			...(recommendation.booleanLabels
+				? { booleanLabels: recommendation.booleanLabels }
+				: {}),
+			...(recommendation.locatable === false ? { locatable: false } : {}),
 		};
 	});
 }
@@ -87,4 +109,15 @@ export function recommendationIssues(
 	return auditRecommendations(settings, recommendations)
 		.filter((check) => !check.ok)
 		.map((check) => check.label);
+}
+
+export function watchAuditIssueKeys(audit: IntegrationAudit): string[] {
+	const prefix = `${audit.kind}:${audit.id}`;
+	if (!audit.installed) return [`${prefix}:not-installed`];
+	const keys: string[] = [];
+	if (audit.requireEnabled && !audit.enabled) keys.push(`${prefix}:disabled`);
+	for (const check of audit.checks) {
+		if (!check.ok) keys.push(`${prefix}:setting:${check.path}`);
+	}
+	return keys;
 }

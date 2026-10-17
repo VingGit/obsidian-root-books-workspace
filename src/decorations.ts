@@ -63,6 +63,7 @@ export class BookDecorations {
 		this.plugin.app.workspace.iterateAllLeaves((leaf) =>
 			this.decorateLeaf(leaf, books),
 		);
+		this.decorateExplorer(books);
 		this.renderStatus(books);
 	}
 
@@ -78,7 +79,7 @@ export class BookDecorations {
 		const header = (leaf as DecoratableLeaf).tabHeaderEl;
 		if (!header) return;
 		header
-			.querySelectorAll(".root-books-tab-label")
+			.querySelectorAll(".root-books-tab-icon")
 			.forEach((element) => element.remove());
 		header.classList.remove("root-books-tab");
 		header.style.removeProperty("--root-books-accent");
@@ -92,16 +93,54 @@ export class BookDecorations {
 		if (this.settings.colorTabs) header.classList.add("root-books-tab");
 		if (!this.settings.showBookLabel) return;
 
-		const label = header.createSpan({ cls: "root-books-tab-label" });
-		const icon = label.createSpan({ cls: "root-books-tab-label-icon" });
+		const inner = header.querySelector<HTMLElement>(
+			".workspace-tab-header-inner",
+		);
+		if (!inner) return;
+		const icon = inner.createSpan({ cls: "root-books-tab-icon" });
 		setIcon(icon, book.panel.icon.replace(/^lucide:/, ""));
-		label.createSpan({ text: book.name });
-		label.setAttribute("aria-label", `Edit appearance for ${book.name}`);
-		label.addEventListener("click", (event) => {
+		inner.prepend(icon);
+		icon.setAttribute("aria-label", `Edit appearance for ${book.name}`);
+		icon.addEventListener("click", (event) => {
 			event.preventDefault();
 			event.stopPropagation();
 			this.openAppearance(book);
 		});
+	}
+
+	private decorateExplorer(books: BookRecord[]): void {
+		document
+			.querySelectorAll<HTMLElement>(
+				".nav-folder-title.root-books-folder",
+			)
+			.forEach((title) => {
+				title.classList.remove("root-books-folder");
+				title.style.removeProperty("--root-books-accent");
+				title
+					.querySelectorAll(".root-books-folder-icon")
+					.forEach((element) => element.remove());
+			});
+
+		const titles = Array.from(
+			document.querySelectorAll<HTMLElement>(".nav-folder-title"),
+		);
+		for (const title of titles) {
+			const path =
+				title.dataset.path ?? title.parentElement?.dataset.path ?? "";
+			const book = books.find(
+				(candidate) => candidate.folderPath === path,
+			);
+			if (!book) continue;
+			title.addClass("root-books-folder");
+			title.style.setProperty("--root-books-accent", book.panel.accent);
+			const content = title.querySelector<HTMLElement>(
+				".nav-folder-title-content",
+			);
+			if (!content) continue;
+			const icon = content.createSpan({ cls: "root-books-folder-icon" });
+			setIcon(icon, book.panel.icon.replace(/^lucide:/, ""));
+			content.prepend(icon);
+		}
 	}
 
 	private renderStatus(books: BookRecord[]): void {
@@ -143,12 +182,13 @@ export class BookDecorations {
 			const header = (leaf as DecoratableLeaf).tabHeaderEl;
 			if (!header) return;
 			header
-				.querySelectorAll(".root-books-tab-label")
+				.querySelectorAll(".root-books-tab-icon")
 				.forEach((element) => element.remove());
 			header.classList.remove("root-books-tab");
 			header.style.removeProperty("--root-books-accent");
 			header.removeAttribute("data-root-book");
 		});
+		this.decorateExplorer([]);
 		this.status.remove();
 	}
 }

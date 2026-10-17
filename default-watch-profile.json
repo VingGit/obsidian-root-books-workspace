@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 3,
+  "targets": [
+    {
+      "kind": "community-plugin",
+      "id": "folder-notes",
+      "name": "Folder Notes",
+      "purpose": "Keeps every book represented by an index.md folder note that Obsidian and Quartz can share.",
+      "requireEnabled": true,
+      "checks": [
+        {
+          "path": "folderNoteName",
+          "label": "Folder-note name is index",
+          "description": "Quartz and Toolkit use index.md as the stable entry note for every first-level book folder.",
+          "settingsLabel": "Folder note name template",
+          "comparison": "equals",
+          "expected": "index"
+        },
+        {
+          "path": "folderNoteType",
+          "label": "Folder notes use Markdown",
+          "description": "Quartz publishes Markdown folder notes; other file types cannot provide the shared book frontmatter.",
+          "settingsLabel": "Default file type for new folder notes",
+          "comparison": "equals",
+          "expected": ".md"
+        },
+        {
+          "path": "storageLocation",
+          "label": "Folder notes stay inside folders",
+          "description": "Keeping index.md inside its book folder makes the folder portable and gives Quartz a predictable folder page.",
+          "settingsLabel": "Storage location",
+          "comparison": "equals",
+          "expected": "insideFolder"
+        },
+        {
+          "path": "templatePath",
+          "label": "Folder-note template is templates/index-template.md",
+          "description": "The shared template seeds the workflow and portable panel metadata expected for new books.",
+          "settingsLabel": "Template path",
+          "comparison": "equals",
+          "expected": "templates/index-template.md"
+        },
+        {
+          "path": "autoCreate",
+          "label": "Folder notes are created automatically",
+          "description": "Automatic creation prevents new first-level folders from missing the index.md required by the book workflow.",
+          "settingsLabel": "Auto-create on folder creation",
+          "comparison": "equals",
+          "expected": true
+        },
+        {
+          "path": "hideFolderNote",
+          "label": "Folder-note files stay hidden in Explorer",
+          "description": "The folder itself represents the book in Explorer, so showing index.md beside it would duplicate the entry.",
+          "settingsLabel": "Hide folder note",
+          "comparison": "equals",
+          "expected": true
+        },
+        {
+          "path": "frontMatterTitle.enabled",
+          "label": "Front Matter Title integration is enabled",
+          "description": "This lets Folder Notes display the title property from index.md as the book's visible name.",
+          "settingsLabel": "Enable front matter title plugin integration",
+          "comparison": "equals",
+          "expected": true
+        },
+        {
+          "path": "frontMatterTitle.explorer",
+          "label": "Explorer uses folder-note titles",
+          "description": "Book folders should use the human-readable title from index.md instead of exposing only the directory name.",
+          "settingsLabel": "Auto update folder name in the file explorer (front matter title plugin only)",
+          "comparison": "equals",
+          "expected": true
+        },
+        {
+          "path": "frontMatterTitle.path",
+          "label": "Paths use folder-note titles",
+          "description": "Breadcrumbs and displayed paths stay consistent with the title used for the book in Explorer.",
+          "settingsLabel": "Auto update folder name in the path (front matter title plugin only)",
+          "comparison": "equals",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "kind": "community-plugin",
+      "id": "custom-sort",
+      "name": "Custom File Explorer Sorting",
+      "purpose": "Applies inherited sorting-spec rules so book folders and notes appear in their intentional order.",
+      "requireEnabled": true,
+      "checks": [
+        {
+          "path": "indexNoteNameForFolderNotes",
+          "label": "Folder-note name is index",
+          "description": "Custom Sort must read sorting metadata from the same index.md folder note used by Folder Notes and Quartz.",
+          "settingsLabel": "Name of index note (Folder Notes support)",
+          "comparison": "equals",
+          "expected": "index"
+        },
+        {
+          "path": "suspended",
+          "label": "Custom sorting runtime is active",
+          "description": "The stored flag is inverted: false means Custom Sort is running and applying the configured order.",
+          "comparison": "equals",
+          "expected": false,
+          "locatable": false,
+          "booleanLabels": {
+            "true": "Suspended",
+            "false": "Active"
+          }
+        },
+        {
+          "path": "automaticBookmarksIntegration",
+          "label": "Bookmark integration is enabled",
+          "description": "Bookmarks provide an optional drag-and-drop ordering source alongside sorting-spec rules.",
+          "settingsLabel": "Automatic integration with core Bookmarks plugin (for indirect drag & drop ordering)",
+          "comparison": "equals",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "kind": "community-plugin",
+      "id": "obsidian-front-matter-title-plugin",
+      "name": "Front Matter Title",
+      "purpose": "Uses each index.md title as the human-readable name shown for books, suggestions, and links.",
+      "requireEnabled": true,
+      "checks": [
+        {
+          "path": "templates.common.main",
+          "label": "The common title property is title",
+          "description": "The shared book model stores its display name in the standard title frontmatter property.",
+          "settingsLabel": "Common main template",
+          "comparison": "equals",
+          "expected": "title"
+        },
+        {
+          "path": "features.alias.enabled",
+          "label": "Alias injection is disabled to avoid duplicate index suggestions",
+          "description": "Adding every folder-note title as an alias creates duplicate index.md suggestions and link targets.",
+          "settingsLabel": "Alias",
+          "comparison": "equals",
+          "expected": false
+        },
+        {
+          "path": "features.explorer.enabled",
+          "label": "Explorer titles are enabled",
+          "description": "Explorer can show the book title stored in index.md instead of the raw folder-note filename.",
+          "settingsLabel": "Explorer",
+          "comparison": "equals",
+          "expected": true
+        },
+        {
+          "path": "features.suggest.enabled",
+          "label": "Suggestion titles are enabled",
+          "description": "Link suggestions use readable book and note titles while preserving their actual paths.",
+          "settingsLabel": "Suggest",
+          "comparison": "equals",
+          "expected": true
+        },
+        {
+          "path": "features.noteLink.enabled",
+          "label": "Note-link titles are enabled",
+          "description": "Inserted internal links can display resolved frontmatter titles without renaming source files.",
+          "settingsLabel": "Note Link",
+          "comparison": "equals",
+          "expected": true
+        },
+        {
+          "path": "features.noteLink.strategy",
+          "label": "Only empty link aliases are filled",
+          "description": "Existing hand-written link text stays untouched; only links without an alias receive the resolved title.",
+          "settingsLabel": "Note Link",
+          "settingsChildLabel": "Strategy",
+          "comparison": "equals",
+          "expected": "onlyEmpty"
+        }
+      ]
+    },
+    {
+      "kind": "community-plugin",
+      "id": "frontmatter-date-manager",
+      "name": "Frontmatter Date Manager",
+      "purpose": "Maintains reliable created and updated properties used by templates, filenames, and book ordering.",
+      "requireEnabled": true,
+      "checks": [
+        {
+          "path": "dateFormat",
+          "label": "Date and time use the portable ISO-like format",
+          "description": "A stable locale-independent timestamp keeps frontmatter portable and consistently sortable.",
+          "settingsLabel": "Date format",
+          "comparison": "equals",
+          "expected": "yyyy-MM-dd'T'HH:mm:ss"
+        },
+        {
+          "path": "headerCreated",
+          "label": "The creation field is created",
+          "description": "Toolkit and sorting rules expect the creation timestamp under the created property.",
+          "settingsLabel": "Created property",
+          "comparison": "equals",
+          "expected": "created"
+        },
+        {
+          "path": "headerUpdated",
+          "label": "The update field is updated",
+          "description": "Toolkit expects edit timestamps under the updated property so ordering and templates agree.",
+          "settingsLabel": "Updated property",
+          "comparison": "equals",
+          "expected": "updated"
+        },
+        {
+          "path": "enableCreateTime",
+          "label": "Creation dates are enabled",
+          "description": "New notes need a created value before date-based ordering can place them reliably.",
+          "settingsLabel": "Track creation date",
+          "comparison": "equals",
+          "expected": true
+        },
+        {
+          "path": "enableAutoUpdate",
+          "label": "Update dates are enabled",
+          "description": "Automatic dates keep the updated property current after real note edits.",
+          "settingsLabel": "Automatic dates",
+          "comparison": "equals",
+          "expected": true
+        },
+        {
+          "path": "filterRules",
+          "label": "Templates and root notes are skipped",
+          "description": "Template files and root-level workflow notes should not receive ordinary note timestamps.",
+          "settingsLabel": "Files and folders to skip",
+          "comparison": "equals",
+          "expected": "templates/\n./*"
+        },
+        {
+          "path": "enableAutoPopulateCache",
+          "label": "The date cache populates at startup",
+          "description": "Pre-populating change-detection data prevents sync-only rewrites from looking like real edits.",
+          "comparison": "equals",
+          "expected": true,
+          "locatable": false
+        },
+        {
+          "path": "inversionFixStrategy",
+          "label": "Out-of-order dates are preserved",
+          "description": "Toolkit reports date inversions without silently rewriting historical created or updated values.",
+          "settingsLabel": "How to fix out-of-order dates",
+          "comparison": "equals",
+          "expected": "disabled"
+        },
+        {
+          "path": "postUpdateCommand",
+          "label": "Broad post-update sorting is disabled",
+          "description": "Toolkit requests narrowly scoped Custom Sort refreshes, so a command after every timestamp update would duplicate work.",
+          "comparison": "equals",
+          "expected": "",
+          "locatable": false
+        }
+      ]
+    }
+  ]
+}

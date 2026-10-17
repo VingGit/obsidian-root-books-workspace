@@ -95,6 +95,89 @@
 	border-radius: var(--radius-s);
 }
 
+.root-books-watch-actions {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+	justify-content: flex-end;
+}
+
+.root-books-remove-button {
+	border-color: transparent !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	color: var(--text-error) !important;
+}
+
+.root-books-watch-editor {
+	margin-block: 0.75rem;
+	padding: 0.75rem;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	background: var(--background-secondary);
+}
+
+.root-books-check-description,
+.root-books-target-description,
+.root-books-empty-state {
+	color: var(--text-muted);
+}
+
+.root-books-card-footer {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 1rem;
+	margin-block-start: 0.75rem;
+	padding-block-start: 0.75rem;
+	border-block-start: 1px solid var(--background-modifier-border);
+}
+
+.root-books-target-description {
+	flex: 1 1 18rem;
+}
+
+.root-books-setting-focus {
+	animation: root-books-setting-focus 2.5s ease-out;
+	outline: 2px solid var(--interactive-accent);
+	outline-offset: 3px;
+}
+
+.root-books-settings-return-slip {
+	position: fixed;
+	z-index: 10000;
+	top: 0.55rem;
+	left: 0.55rem;
+	padding: 0.45rem 0.7rem;
+	border: 1px solid var(--interactive-accent);
+	border-radius: var(--radius-s);
+	background: var(--interactive-accent);
+	box-shadow: var(--shadow-s);
+	color: var(--text-on-accent);
+	font-weight: var(--font-semibold);
+}
+
+.root-books-settings-return-slip:hover,
+.root-books-settings-return-slip:focus-visible {
+	background: var(--interactive-accent-hover);
+	color: var(--text-on-accent);
+}
+
+@keyframes root-books-setting-focus {
+	0%,
+	65% {
+		background: color-mix(
+			in srgb,
+			var(--interactive-accent) 18%,
+			transparent
+		);
+	}
+	100% {
+		background: transparent;
+	}
+}
+
 .root-books-integration-card h3,
 .root-books-integration-card h4,
 .root-books-integration-card p {
@@ -113,7 +196,9 @@
 
 .root-books-panel-preview,
 .root-books-status,
-.root-books-tab-label {
+.root-books-tab-icon,
+.root-books-folder-icon,
+.root-books-icon-suggestion {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.35rem;
@@ -134,12 +219,16 @@
 }
 
 .root-books-status-icon,
-.root-books-tab-label-icon {
+.root-books-tab-icon,
+.root-books-folder-icon,
+.root-books-icon-suggestion-glyph {
 	display: inline-flex;
 }
 
 .root-books-status-icon svg,
-.root-books-tab-label-icon svg {
+.root-books-tab-icon svg,
+.root-books-folder-icon svg,
+.root-books-icon-suggestion-glyph svg {
 	width: 0.95em;
 	height: 0.95em;
 }
@@ -148,18 +237,33 @@
 	box-shadow: inset 0 -2px var(--root-books-accent);
 }
 
-.root-books-tab-label {
-	max-width: 10rem;
-	margin-inline-start: 0.35rem;
-	padding: 0.1rem 0.35rem;
-	overflow: hidden;
-	border-radius: var(--radius-s);
-	color: color-mix(in srgb, var(--root-books-accent) 78%, var(--text-normal));
-	font-size: var(--font-ui-smaller);
-	text-overflow: ellipsis;
-	white-space: nowrap;
+.workspace-tab-header.root-books-tab .workspace-tab-header-inner-title,
+.workspace-tab-header.root-books-tab .root-books-tab-icon {
+	color: var(--root-books-accent) !important;
 }
 
-.root-books-tab-label:hover {
-	background: color-mix(in srgb, var(--root-books-accent) 14%, transparent);
+.root-books-tab-icon {
+	flex: 0 0 auto;
+	cursor: pointer;
+}
+
+.nav-folder-title.root-books-folder,
+.nav-folder-title.root-books-folder .nav-folder-title-content,
+.nav-folder-title.root-books-folder .root-books-folder-icon {
+	color: var(--root-books-accent) !important;
+}
+
+.root-books-folder-icon {
+	margin-inline-end: 0.3rem;
+	vertical-align: text-bottom;
+}
+
+.root-books-icon-suggestion {
+	width: 100%;
+	min-height: 1.75rem;
+}
+
+.root-books-icon-suggestion-glyph {
+	width: 1.4rem;
+	justify-content: center;
 }
