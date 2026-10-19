@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.13.1
+
+- Coordinated the ecosystem release with Custom File Explorer Sorting
+  Support's targeted article-navigation popovers. Root Books Toolkit behavior
+  and the portable book metadata contract are unchanged.
+
 ## 0.13.0
 
 - Coordinated the ecosystem release with Custom File Explorer Sorting
