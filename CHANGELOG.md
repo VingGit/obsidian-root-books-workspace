@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.13.0
+
+- Coordinated the ecosystem release with Custom File Explorer Sorting
+  Support's intentional-backlink preservation, native Quartz previews, and
+  Finnish article-navigation labels. Root Books Toolkit behavior and the
+  portable book metadata contract are unchanged.
+
 ## 0.12.0
 
 - Reorganized the watched-state dashboard into Community plugins, Core

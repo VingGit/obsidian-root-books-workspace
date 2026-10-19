@@ -1,6 +1,6 @@
 {
   "name": "root-books-workspace",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "Obsidian workspace integration for folder-note books, portable appearance, note creation, dates, and sorting.",
   "main": "main.js",
   "type": "module",
