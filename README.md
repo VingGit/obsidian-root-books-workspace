@@ -134,14 +134,17 @@ fork is a release consumer and is deliberately updated only through Obsidian's
 official Community plugins update action; local builds are never copied into
 that fork.
 
-## Ecosystem versions
+## Portable contracts
 
-Root Books Toolkit, [Root Index Panels](https://github.com/VingGit/root-index-panels),
-and [Custom File Explorer Sorting Support](https://github.com/VingGit/custom-file-explorer-sorting-support)
-share the same portable `panel.icon` and `panel.accent` contract across Obsidian
-and Quartz. Package releases may advance independently when that contract does
-not change; the dashboard's ecosystem version identifies the shared contract
-line rather than the installed Toolkit package version.
+Root Books Toolkit and
+[Root Books Workspace for Quartz](https://github.com/obsidian-material-plugins/quartz-root-books-workspace)
+implement `book-structure/v1` and `book-appearance/v1` from the
+[plugin contract catalog](https://github.com/obsidian-material-plugins/plugin-contracts).
+Their package releases are independent. Compatibility follows the declared
+contract versions rather than matching package versions.
+
+[Custom File Explorer Sorting for Quartz](https://github.com/obsidian-material-plugins/quartz-custom-file-explorer-sorting)
+is a separate optional sorting adapter.
 
 ## License
 

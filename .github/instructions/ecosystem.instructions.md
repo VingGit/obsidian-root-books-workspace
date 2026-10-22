@@ -6,20 +6,23 @@ applyTo: "**"
 
 # Root Books ecosystem
 
-This project shares a portable book contract with:
+This project implements the following independently versioned contracts from
+`obsidian-material-plugins/plugin-contracts`:
 
-- `VingGit/root-index-panels`
-- `VingGit/custom-file-explorer-sorting-support`
+- `book-structure/v1`
+- `book-appearance/v1`
 
-The packages may release independently when a change does not alter the shared
-`panel.icon` and `panel.accent` contract or require companion code changes.
-Every release still requires a compatibility audit of the other two projects
-and synchronized instructions or human documentation where affected.
+The Quartz counterpart is
+`obsidian-material-plugins/quartz-root-books-workspace`. Optional navigation
+sorting is provided by
+`obsidian-material-plugins/quartz-custom-file-explorer-sorting` through its own
+runtime capability. Every package releases independently. A contract change
+creates a new contract version and a compatibility audit; it never requires
+unrelated package versions to move together.
 
-`ECOSYSTEM_VERSION` identifies the shared portable-contract line, not the
-Toolkit package version. Change that value and release all three packages at
-the same version only when the shared contract changes. Package release tags
-must exactly equal that package's version without a leading `v`.
+Package release tags exactly equal this package's version without a leading
+`v`. Do not add a monolithic ecosystem version to settings, package metadata,
+or release workflows.
 
 No instruction or fixture may contain a contributor's machine-specific path,
 vault contents, account data, or credentials.

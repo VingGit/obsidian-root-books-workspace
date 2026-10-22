@@ -1,6 +1,7 @@
 import { App, Plugin } from "obsidian";
 
 const CUSTOM_SORT_COMMAND = "custom-sort:enable-custom-sorting";
+const MAX_COMMAND_ATTEMPTS = 3;
 
 interface CommandManager {
 	executeCommandById?: (id: string) => boolean;
@@ -33,6 +34,7 @@ function inlineRenameActive(): boolean {
 export class SortingCoordinator {
 	private timer: number | null = null;
 	private disposed = false;
+	private failedAttempts = 0;
 	private pendingReasons = new Set<string>();
 
 	constructor(private readonly plugin: Plugin) {}
@@ -40,6 +42,7 @@ export class SortingCoordinator {
 	request(reason: string): void {
 		if (this.disposed) return;
 		this.pendingReasons.add(reason);
+		this.failedAttempts = 0;
 		this.schedule(250);
 	}
 
@@ -58,8 +61,22 @@ export class SortingCoordinator {
 		const executed = commandManager(this.plugin.app)?.executeCommandById?.(
 			CUSTOM_SORT_COMMAND,
 		);
-		if (executed) this.pendingReasons.clear();
-		else this.schedule(1_000);
+		if (executed) {
+			this.pendingReasons.clear();
+			this.failedAttempts = 0;
+			return;
+		}
+		this.failedAttempts += 1;
+		if (this.failedAttempts < MAX_COMMAND_ATTEMPTS) {
+			this.schedule(1_000);
+			return;
+		}
+		console.warn(
+			`Root Books Workspace stopped retrying ${CUSTOM_SORT_COMMAND} after ${MAX_COMMAND_ATTEMPTS} failed attempts`,
+			{ reasons: [...this.pendingReasons] },
+		);
+		this.pendingReasons.clear();
+		this.failedAttempts = 0;
 	}
 
 	dispose(): void {
@@ -67,5 +84,6 @@ export class SortingCoordinator {
 		if (this.timer !== null) window.clearTimeout(this.timer);
 		this.timer = null;
 		this.pendingReasons.clear();
+		this.failedAttempts = 0;
 	}
 }
