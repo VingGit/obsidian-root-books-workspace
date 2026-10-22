@@ -1,5 +1,3 @@
-export const ECOSYSTEM_VERSION = "0.11.0";
-
 export const REQUIRED_PLUGIN_IDS = [
 	"folder-notes",
 	"custom-sort",

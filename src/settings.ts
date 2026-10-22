@@ -24,7 +24,6 @@ import {
 	watchProfileDisplayPath,
 } from "./integrations";
 import {
-	ECOSYSTEM_VERSION,
 	OBSIDIAN_OPTION_PAGES,
 	type BooleanValueLabels,
 	type CoordinatorHealthItem,
@@ -502,7 +501,7 @@ export class RootBooksWorkspaceSettingTab extends PluginSettingTab {
 		return [
 			{
 				name: "Root Books Toolkit",
-				desc: `Ecosystem version ${ECOSYSTEM_VERSION}. Toolkit audits watched state without changing Obsidian or plugin settings.`,
+				desc: "Toolkit audits watched state without changing Obsidian or plugin settings.",
 				searchable: false,
 			},
 			{

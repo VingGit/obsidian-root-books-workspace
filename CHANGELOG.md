@@ -1,6 +1,15 @@
 # Changelog
 
-## Unreleased
+## 0.14.0
+
+- Bound Custom Sort refresh retries to three failed command attempts and log the triggering reasons instead of retrying indefinitely.
+
+- Moved the repository and package identity to the
+  `obsidian-material-plugins` organization while preserving the published
+  `root-books-workspace` Obsidian plugin ID.
+- Replaced the monolithic ecosystem version with explicit
+  `book-structure/v1` and `book-appearance/v1` contract declarations so the
+  Obsidian and Quartz implementations can release independently.
 
 ## 0.13.1
 
